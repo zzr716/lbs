@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Canvas照片水印</title>
+  <style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  html, body {
+    height: 100%;
+  }
+  body {
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .container {
+    width: 900px;
+    height: 400px;
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .container #video, .container #canvas {
+    flex: 1;
+    border: 1px solid #333;
+  }
+  #snap {
+    margin: 0 10px;
+    width: 80px;
+    line-height: 30px;
+    height: 30px;
+  }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <audio id="audio"></audio>
+    <video id="video" width="400" height="400" autoplay></video>
+    <button id="snap">拍张照片</button>
+    <canvas id="canvas" width="400" height="400"></canvas>
+  </div>
+  <script>
+  window.onload = function() {
+    const video = document.querySelector('#video'),
+      audio = document.querySelector('#audio'),
+      btn = document.querySelector('#snap'),
+      canvas = document.querySelector('#canvas');
+      navigator.getUserMedia =
+      navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.msGetUserMedia
+      window.URL = window.URL || window.webkitURL || window.msURL;
+      // 将摄像头的内容放到video里
+      if(navigator.getUserMedia) {
+        navigator.getUserMedia({audio: true}, function(stream) {
+          // 视频流 音频流
+          // server 可以浏览器打开
+          // 摄像头 捕捉视频流 由浏览器播放出来
+          var url =window.URL.createObjectURL(stream);
+          audio.src = url;
+          audio.play();
+        },function(err) {
+
+        })
+      }
+      // 点击按钮之后，拍照
+      // canvas可以放图片stream流里取出一张
+      btn.addEventListener('click',function() {
+        let context = canvas.getContext('2d');
+        context.drawImage(video,0,0,400,400);
+        //文字
+        context.font = "24px microsoft yahei";
+        context.fillStyle = "rgba(255,255,255,.9)";
+        context.fillText("没有蛀牙",220,360);
+      })
+  }
+  </script>
+</body>
+</html>
